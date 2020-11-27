@@ -20,7 +20,8 @@ module.exports = app => {
   router.get(`${PREFIX}/soup/getOne`, controller.soup.getOne);
   router.get(`${PREFIX}/soup/list`, controller.soup.list);
   
-  router.get(`${PREFIX}/english/getOne`, controller.english.getOne);
+  router.get(`${PREFIX}/english/detail`, controller.english.detail);
+  router.get(`${PREFIX}/english/list`, controller.english.list);
  
   router.get(`${PREFIX}/user`, jwt, controller.user.index);
   router.post(`${PREFIX}/login`, controller.user.login);

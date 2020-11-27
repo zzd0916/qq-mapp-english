@@ -8,12 +8,9 @@ const typeMap = {
   '4': "EnglishVideo",
 }
 class EnglishController extends Controller {
-  async getOne() {
+  async detail() {
     const { ctx } = this;
-    const { type, p, ps } = ctx.request.query;
-    if(!type) ctx.body = {state: 0, msg: "params error"}
-    let t = typeMap[type] || 'EnglishHome'
-    ctx.body = await ctx.model[t].aggregate([{$sample: {size:1}}]);
+  
   }
   
   async index() {
@@ -23,15 +20,13 @@ class EnglishController extends Controller {
 
   async list() {
     const { ctx } = this;
-    let { p, ps } = ctx.request.query;
-    // const count = await ctx.model.find({}).count();
-    // if(p < 1) {
-      // p = 1;
-    // }
-    // if(p > (count/ps)) {
-      //p = parseInt(count/ps)
-    //}
-    ctx.body = await ctx.model.Soup.find({}).skip((p-1)*parseInt(ps)).limit(parseInt(ps));
+    const { type, p=1, ps=10 } = ctx.request.query;
+    if(!type) {
+      ctx.body = {state: 0, msg: "params error"}
+      return
+    }
+    let t = typeMap[type] || 'EnglishHome'
+    ctx.body = await ctx.model[t].find({}).skip((p-1)*parseInt(ps)).limit(parseInt(ps));
   } 
  
   async save() {
