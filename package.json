@@ -11,6 +11,7 @@
     "egg-jwt": "^3.1.7",
     "egg-mongoose": "^3.2.0",
     "egg-scripts": "^2.11.0",
+    "puppeteer": "^5.5.0",
     "qiniu": "^7.3.2"
   },
   "devDependencies": {

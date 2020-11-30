@@ -22,6 +22,7 @@ module.exports = app => {
   
   router.get(`${PREFIX}/english/detail`, controller.english.detail);
   router.get(`${PREFIX}/english/list`, controller.english.list);
+  router.post(`${PREFIX}/english/detail`, controller.english.detail);
  
   router.get(`${PREFIX}/user`, jwt, controller.user.index);
   router.post(`${PREFIX}/login`, controller.user.login);
