@@ -22,31 +22,83 @@ class EnglishController extends Controller {
     await page.goto(url, {waitUntil: 'domcontentloaded'});
     // 其他操作...
     // detailData = await page.content()
-    let content = await page.$$eval('#Content > p', els => {
+    let title = await page.$eval(".main_title1", el => el.innerText);
+    let origin = await page.$eval(".main_title3", el => el.innerText);
+    let content = await page.$$eval('#Content > *', els => {
       let json = []
       for(let i = 0; i < els.length; i++) {
-        if(els[i].innerText.length > 10) {
-          json.push({
-            type: els[i].tagName,
-            content: els[i].innerText
+        let el = els[i];
+        let type = el.tagName;
+        let reSrc = /\s+src=['"]([^'"]+)['"]/
+        let html = el.innerHTML;
+
+        const pushData = (data)=> {
+          let flag = json.some( i=> {
+            JSON.stringify(i) == JSON.stringify(data)
           })
+          if(!flag) {
+            json.push(data)
+          }
+        }
+
+        switch (type) {
+          case 'DIV': 
+            // 判断有没有音频 
+            if(html.indexOf('audio') > 0)  {
+              pushData({
+                type: 'AUDIO',
+                src: reSrc.exec(html)[1]
+              })
+            }
+            
+            // 判断有没有音频 
+            if(html.indexOf('video') > 0)  {
+              pushData({
+                type: 'VIDEO',
+                src: reSrc.exec(html)[1]
+              })
+            }
+
+            break;
+            
+          case "P": {
+            if(el.innerText.length>10) {
+              pushData({
+                type: type,
+                content: els[i].innerText
+              })
+            }
+            break;
+          }
+          case "FIGURE": {
+            if(html.indexOf('img') > 0) {
+              pushData({
+                type: "IMAGE",
+                src: html.match(reSrc)[1]
+              })
+            }
+            break;
+          }
+          default: 
+            pushData({
+              type: type,
+              content: html
+            })
         }
       }
       return json
     })
-
-    let audio = await page.$$eval('#Content audio', el => el.getAttribute('src'))
-    console.log(audio)
-
-    let img = await page.$$eval('#Content img', el => el.getAttribute('src'))
-    console.log(audio)
 
     await browser.close();
 
     ctx.body = {
       state: 1,
       data: {
-        detailData: content
+        detailData: {
+          list: content,
+          title,
+          origin
+        }
       }
     }
     
