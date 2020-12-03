@@ -41,8 +41,8 @@ module.exports = appInfo => {
         // useUnifiedTopology: true,  
         useUnifiedTopology: true,
         // auth: { authSource: 'admin' },
-        // user: 'mapp',
-        // pass: 'mapp',
+        user: 'mapp',
+        pass: 'mapp',
       },
       // mongoose global plugins, expected a function or an array of function and options
       // plugins: [createdPlugin, [updatedPlugin, pluginOptions]],
